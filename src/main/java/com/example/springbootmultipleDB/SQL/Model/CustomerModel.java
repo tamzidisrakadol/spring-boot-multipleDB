@@ -1,4 +1,4 @@
-package com.example.springbootmultipleDB.SQL;
+package com.example.springbootmultipleDB.SQL.Model;
 
 import jakarta.persistence.*;
 import lombok.Data;

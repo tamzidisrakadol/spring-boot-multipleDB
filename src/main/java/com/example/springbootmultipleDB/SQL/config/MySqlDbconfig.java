@@ -28,9 +28,9 @@ import java.util.Objects;
 @Configuration
 @EnableTransactionManagement
 @EnableJpaRepositories(
-        entityManagerFactoryRef = "secondEntityManagerBean",
-        basePackages = {"com.example.springbootmultipleDB.SQL"},
-        transactionManagerRef = "secondTransaction"
+        entityManagerFactoryRef = "entityManagerBean",
+        basePackages = {"com.example.springbootmultipleDB.SQL.Repo"},
+        transactionManagerRef = "transaction"
 )
 
 
@@ -38,25 +38,23 @@ public class MySqlDbconfig {
     @Autowired
     private Environment environment;
 
-
-    @Bean(name = "secondDataSource")
+    @Bean
     @Primary
     public DataSource dataSource(){
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setUrl(environment.getProperty("second.datasource.url"));
-        dataSource.setDriverClassName(environment.getProperty("second.datasource.driver-class-name"));
-        dataSource.setUsername(environment.getProperty("second.datasource.username"));
-        dataSource.setPassword(environment.getProperty("second.datasource.password"));
+        dataSource.setUrl(environment.getProperty("spring.datasource.url"));
+        dataSource.setDriverClassName(environment.getProperty("spring.datasource.driver-class-name"));
+        dataSource.setUsername(environment.getProperty("spring.datasource.username"));
+        dataSource.setPassword(environment.getProperty("spring.datasource.password"));
         return dataSource;
     }
 
 
-    @Bean(name = "secondEntityManagerBean")
+    @Bean(name = "entityManagerBean")
     @Primary
     public LocalContainerEntityManagerFactoryBean entityManagerFactoryBean(){
         LocalContainerEntityManagerFactoryBean bean = new LocalContainerEntityManagerFactoryBean();
         bean.setDataSource(dataSource());
-        bean.setPackagesToScan("com.example.springbootmultipleDB.SQL");
         JpaVendorAdapter jpaVendorAdapter = new HibernateJpaVendorAdapter();
         bean.setJpaVendorAdapter(jpaVendorAdapter);
         Map<String,String> props = new HashMap<>();
@@ -64,16 +62,16 @@ public class MySqlDbconfig {
         props.put("hibernate.show_sql","true");
         props.put("hibernate.hdm2ddl.auto","update");
         bean.setJpaPropertyMap(props);
+        bean.setPackagesToScan("com.example.springbootmultipleDB.SQL.Model");
         return bean;
     }
 
 
     @Primary
-    @Bean(name = "secondTransaction")
+    @Bean(name = "transaction")
     public PlatformTransactionManager transactionManager(){
         JpaTransactionManager jpaTransactionManager = new JpaTransactionManager();
         jpaTransactionManager.setEntityManagerFactory(entityManagerFactoryBean().getObject());
-
         return jpaTransactionManager;
     }
 

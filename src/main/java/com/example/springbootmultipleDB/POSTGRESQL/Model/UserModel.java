@@ -1,4 +1,4 @@
-package com.example.springbootmultipleDB.POSTGRESQL;
+package com.example.springbootmultipleDB.POSTGRESQL.Model;
 
 import jakarta.persistence.*;
 import lombok.Data;

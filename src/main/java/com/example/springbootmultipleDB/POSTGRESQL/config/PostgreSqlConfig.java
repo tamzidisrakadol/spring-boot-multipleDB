@@ -27,32 +27,32 @@ import java.util.Map;
 @Configuration
 @EnableTransactionManagement
 @EnableJpaRepositories(
-        entityManagerFactoryRef = "firstEntityManagerBean",
-        basePackages = {"com.example.springbootmultipleDB.POSTGRESQL"},
-        transactionManagerRef = "firstTransaction"
+        entityManagerFactoryRef = "secondEntityManagerBean",
+        basePackages = {"com.example.springbootmultipleDB.POSTGRESQL.Repo"},
+        transactionManagerRef = "secondTransaction"
 )
 public class PostgreSqlConfig {
 
     @Autowired
     private Environment environment;
 
-    @Bean(name = "firstDataSource")
+    @Bean(name = "secondDataSource")
     @Primary
     public DataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setUrl(environment.getProperty("spring.datasource.url"));
-        dataSource.setDriverClassName(environment.getProperty("spring.datasource.driver-class-name"));
-        dataSource.setUsername(environment.getProperty("spring.datasource.username"));
-        dataSource.setPassword(environment.getProperty("spring.datasource.password"));
+        dataSource.setUrl(environment.getProperty("second.datasource.url"));
+        dataSource.setDriverClassName(environment.getProperty("second.datasource.driver-class-name"));
+        dataSource.setUsername(environment.getProperty("second.datasource.username"));
+        dataSource.setPassword(environment.getProperty("second.datasource.password"));
         return dataSource;
     }
 
-    @Bean(name = "firstEntityManagerBean")
+    @Bean(name = "secondEntityManagerBean")
     @Primary
     public LocalContainerEntityManagerFactoryBean entityManagerFactoryBean(){
         LocalContainerEntityManagerFactoryBean bean = new LocalContainerEntityManagerFactoryBean();
         bean.setDataSource(dataSource());
-        bean.setPackagesToScan("com.example.springbootmultipleDB.POSTGRESQL");
+        bean.setPackagesToScan("com.example.springbootmultipleDB.POSTGRESQL.Model");
         JpaVendorAdapter jpaVendorAdapter = new HibernateJpaVendorAdapter();
         bean.setJpaVendorAdapter(jpaVendorAdapter);
         Map<String,String> props = new HashMap<>();
@@ -65,7 +65,7 @@ public class PostgreSqlConfig {
 
 
     @Primary
-    @Bean(name = "firstTransaction")
+    @Bean(name = "secondTransaction")
     public PlatformTransactionManager transactionManager(){
         JpaTransactionManager jpaTransactionManager = new JpaTransactionManager();
         jpaTransactionManager.setEntityManagerFactory(entityManagerFactoryBean().getObject());
