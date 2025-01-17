@@ -25,6 +25,15 @@ import java.util.Map;
 )
 public class MysqlConfiguration {
 
+    /**
+     * Defines the MySQL EntityManagerFactory bean, responsible for managing the persistence context
+     * for MySQL entities. This is marked as the primary EntityManagerFactory.
+     *
+     * @param builder  The EntityManagerFactoryBuilder used to construct the factory.
+     * @param dataSource The DataSource for the MySQL database.
+     * @return A configured LocalContainerEntityManagerFactoryBean for MySQL.
+     */
+
     @Primary
     @Bean(name = "mysqlEntityManagerFactory")
     public LocalContainerEntityManagerFactoryBean mysqlEntityManagerFactory(
@@ -44,6 +53,12 @@ public class MysqlConfiguration {
                 .build();
     }
 
+    /**
+     * Defines the TransactionManager for MySQL, responsible for managing database transactions.
+     *
+     * @param entityManagerFactory The EntityManagerFactory for MySQL.
+     * @return A PlatformTransactionManager configured for MySQL.
+     */
 
     @Bean(name = "mysqlTransactionManager")
     public PlatformTransactionManager mysqlTransactionManager(
@@ -53,6 +68,12 @@ public class MysqlConfiguration {
     }
 
 
+    /**
+     * Defines the MySQL DataSource bean, providing the connection details to the MySQL database.
+     * Marked as the primary DataSource in case multiple DataSources exist in the application.
+     *
+     * @return A DataSource configured with MySQL connection details.
+     */
 
     @Bean(name = "mysqlDataSource")
     @Primary
